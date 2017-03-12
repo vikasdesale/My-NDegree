@@ -42,7 +42,11 @@ public class MyGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         // Time to unparcel the bundle!
+        JSONObject jsonObject=null;
         if (!data.isEmpty()) {
+            String weather = "";
+            String location = "";
+
             // TODO: gcm_default sender ID comes from the API console
             String senderId = getString(R.string.gcm_defaultSenderId1);
             if (senderId.length() == 0) {
@@ -52,12 +56,16 @@ public class MyGcmListenerService extends GcmListenerService {
             if ((senderId).equals(from)) {
                 // Process message and then post a notification of the received message.
                 try {
-                    JSONObject jsonObject = new JSONObject(data.getString(EXTRA_DATA));
-                    String weather = jsonObject.getString(EXTRA_WEATHER);
-                    String location = jsonObject.getString(EXTRA_LOCATION);
-                    String alert =
-                            String.format(getString(R.string.gcm_weather_alert), weather, location);
-                    sendNotification(alert);
+                    if (data.getString(EXTRA_DATA) !=null) {
+                         jsonObject = new JSONObject(data.getString(EXTRA_DATA));
+                    }
+                    if (jsonObject != null) {
+                         weather = jsonObject.getString(EXTRA_WEATHER);
+                         location = jsonObject.getString(EXTRA_LOCATION);
+                    }
+                    String alert = String.format(getString(R.string.gcm_weather_alert), weather, location);
+                        sendNotification(alert);
+
                 } catch (JSONException e) {
                     // JSON parsing failed, so we just let this message go, since GCM is not one
                     // of our critical features.
