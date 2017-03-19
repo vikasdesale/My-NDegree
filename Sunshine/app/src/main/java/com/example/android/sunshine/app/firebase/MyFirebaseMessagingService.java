@@ -56,7 +56,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 String weather = data.get(EXTRA_WEATHER);
                 String location = data.get(EXTRA_LOCATION);
                 String alert =
-                        String.format(getString(R.string.fcm_weather_alert), weather, location);
+                        String.format(getString(R.string.gcm_weather_alert), weather, location);
                 sendNotification(alert);
             }
             Log.i(TAG, "Received: " + message.toString());

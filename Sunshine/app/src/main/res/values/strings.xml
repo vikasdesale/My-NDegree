@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
      Copyright (C) 2015 The Android Open Source Project
-
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
-
           http://www.apache.org/licenses/LICENSE-2.0
-
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,8 +39,15 @@
     <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_location_key" translatable="false">location</string>
 
+    <!-- Key name for storing location status in SharedPreferences -->
+    <string name="pref_location_status_key" translatable="false">loc-status</string>
+
     <!-- Default postal code for location preference [CHAR LIMIT=NONE] -->
     <string name="pref_location_default" translatable="false">94043</string>
+
+    <!-- Strings used when displaying the state of the Location in settings -->
+    <string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="pref_location_unknown_description">Validating Location... (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
 
     <!-- Strings related to Notification Enabled preference -->
     <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>
@@ -73,45 +77,6 @@
     <!-- Value in SharedPreferences for imperial temperature unit option [CHAR LIMIT=NONE] -->
     <string name="pref_units_imperial" translatable="false">imperial</string>
 
-
-    <!-- Language-specific constants -->
-    <string name="today">Today</string>
-
-    <!-- For labelling tomorrow's forecast [CHAR LIMIT=15] -->
-    <string name="tomorrow">Tomorrow</string>
-
-    <!-- Date format [CHAR LIMIT=NONE] -->
-    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
-
-    <!-- Strings for formatting weather-related data -->
-    <!-- Temperature format [CHAR LIMIT=5 -->
-    <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
-
-    <!-- Windspeed formats -->
-    <!-- Wind in mph [CHAR LIMIT=25] -->
-    <string name="format_wind_mph">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
-    <!-- Wind in kph [CHAR LIMIT=25] -->
-    <string name="format_wind_kmh">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
-
-    <!-- Pressure format CHAR LIMIT=25] -->
-    <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
-
-    <!-- Humidity format CHAR LIMIT=25]-->
-    <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
-
-    <!-- SyncAdapter related -->
-    <string name="sync_account_type">sunshine.example.com</string>
-    <string name="content_authority">com.example.android.sunshine.app</string>
-
-    <!-- Notification Format -->
-    <string name="format_notification">Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g> Low: <xliff:g id="low">%3$s</xliff:g></string>
-
-    <!-- Strings related to Notification preference -->
-    <string name="pref_last_notification">last_notification</string>
-    <!-- Format for retrieving art from an external source [CHAR LIMIT=NONE] -->
-    +    <string name="format_art_url" translatable="false">https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-xxhdpi/art_<xliff:g id="description">%s</xliff:g>.png</string>
-
-
     <!-- Label for the art pack preference [CHAR LIMIT=30] -->
     <string name="pref_art_pack_label">Icon Pack</string>
 
@@ -130,28 +95,61 @@
     <!-- Value in SharedPreferences for cute dogs art pack  option [CHAR LIMIT=NONE] -->
     <string name="pref_art_pack_cute_dogs" translatable="false">https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-mdpi/art_%s.png</string>
 
+    <!-- Language-specific constants -->
+    <string name="today">Today</string>
+
+    <!-- For labelling tomorrow's forecast [CHAR LIMIT=15] -->
+    <string name="tomorrow">Tomorrow</string>
+
+    <!-- Date format [CHAR LIMIT=NONE] -->
+    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
+
+    <!-- Strings for formatting weather-related data -->
+    <!-- Temperature format [CHAR LIMIT=5 -->
+    <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
+
+    <string name="wind">Wind</string>
+    <!-- Windspeed formats -->
+    <!-- Wind in mph [CHAR LIMIT=25] -->
+    <string name="format_wind_mph"><xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
+    <!-- Wind in kph [CHAR LIMIT=25] -->
+    <string name="format_wind_kmh"><xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
+
+    <string name="pressure">Pressure</string>
+    <!-- Pressure format CHAR LIMIT=25] -->
+    <string name="format_pressure"><xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
+
+    <string name="humidity">Humidity</string>
+    <!-- Humidity format CHAR LIMIT=25]-->
+    <string name="format_humidity"><xliff:g id="humidity">%1.0f</xliff:g> %%</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">sunshine.example.com</string>
+    <string name="content_authority">com.example.android.sunshine.app</string>
+
+    <!-- Notification Format -->
+    <string name="format_notification">Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g> Low: <xliff:g id="low">%3$s</xliff:g></string>
+
+    <!-- Strings related to Notification preference -->
+    <string name="pref_last_notification">last_notification</string>
+
     <!-- Empty Weather Database -->
     <string name="empty_forecast_list">No Weather Information Available</string>
     <string name="empty_forecast_list_no_network">No weather information available. The network is not available to fetch weather data.</string>
     <string name="empty_forecast_list_server_down">No weather information available. The server is not returning data.</string>
     <string name="empty_forecast_list_server_error">No weather information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
     <string name="empty_forecast_list_invalid_location">No weather information available. The location in settings is not recognized by the weather server.</string>
-    <!-- Key name for storing location status in SharedPreferences -->
-      <string name="pref_location_status_key" translatable="false">loc-status</string>
-
-    <!-- Strings used when displaying the state of the Location in settings -->
-    <string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
-    <string name="pref_location_unknown_description">Validating Location... (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
-
 
     <!-- A11y -->
     <string name="a11y_forecast">Forecast: <xliff:g id="condition">%1$s</xliff:g></string>
     <string name="a11y_forecast_icon">Forecast icon: <xliff:g id="condition">%1$s</xliff:g></string>
     <string name="a11y_high_temp">High: <xliff:g id="high">%1$s</xliff:g></string>
     <string name="a11y_low_temp">Low: <xliff:g id="low">%1$s</xliff:g></string>
+    <string name="a11y_humidity">Humidity: <xliff:g id="humidity">%1$s</xliff:g></string>
+    <string name="a11y_pressure">Barometric Pressure: <xliff:g id="pressure">%1$s</xliff:g></string>
+    <string name="a11y_wind">Wind speed and direction: <xliff:g id="wind">%1$s</xliff:g></string>
 
-    <!--Weather Conditions-->
-
+    <!-- Weather Conditions -->
     <string name="condition_2xx">Storm</string>
     <string name="condition_3xx">Drizzle</string>
     <string name="condition_500">Light Rain</string>
@@ -212,7 +210,8 @@
     <string name="condition_unknown">Unknown (<xliff:g id="low">%1$s</xliff:g>)</string>
 
     <!-- Used to form a severe weather alert that reads "Heads up: <weather> in <location>!" -->
-    <string name="fcm_weather_alert">Heads up: %1$s in %2$s!</string>
+    <string name="gcm_weather_alert">Heads up: %1$s in %2$s!</string>
+    // TODO: Get the SenderID from the Developer Console
     <string name="gcm_defaultSenderId1" translatable="false">807028941105</string>
-
 </resources>
+
