@@ -1,9 +1,3 @@
-package com.example.android.sunshine.app.gcm;
-
-/**
- * Created by Dell on 3/12/2017.
- */
-
 /*
  * Copyright (C) 2015 The Android Open Source Project
  *
@@ -20,8 +14,10 @@ package com.example.android.sunshine.app.gcm;
  * limitations under the License.
  */
 
- import android.content.Intent;
- import com.google.android.gms.iid.InstanceIDListenerService;
+package com.example.android.sunshine.app.gcm;
+
+import android.content.Intent;
+import com.google.android.gms.iid.InstanceIDListenerService;
 
 public class MyInstanceIDListenerService extends InstanceIDListenerService {
     private static final String TAG = "MyInstanceIDLS";

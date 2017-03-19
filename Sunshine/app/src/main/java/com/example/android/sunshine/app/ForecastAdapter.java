@@ -90,7 +90,6 @@ public class ForecastAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
         int fallbackIconId;
         int viewType = getItemViewType(cursor.getPosition());
@@ -114,6 +113,7 @@ public class ForecastAdapter extends CursorAdapter {
                 .error(fallbackIconId)
                 .crossFade()
                 .into(viewHolder.iconView);
+
         // Read date from cursor
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         // Find TextView and set formatted date on it

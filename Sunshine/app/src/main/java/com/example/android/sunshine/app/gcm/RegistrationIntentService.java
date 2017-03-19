@@ -1,14 +1,26 @@
-package com.example.android.sunshine.app.gcm;
-
-/**
- * Created by Dell on 3/12/2017.
+/*
+ * Copyright (C) 2015 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+package com.example.android.sunshine.app.gcm;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
@@ -34,9 +46,14 @@ public class RegistrationIntentService extends IntentService {
                 // Initially this call goes out to the network to retrieve the token, subsequent calls
                 // are local.
                 InstanceID instanceID = InstanceID.getInstance(this);
-                String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId1),
-                        GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-                sendRegistrationToServer(token);
+
+                // TODO: gcm_default sender ID comes from the API console
+                String senderId = getString(R.string.gcm_defaultSenderId);
+                if ( senderId.length() != 0 ) {
+                    String token = instanceID.getToken(senderId,
+                            GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    sendRegistrationToServer(token);
+                }
 
                 // You should store a boolean that indicates whether the generated token has been
                 // sent to your server. If the boolean is false, send the token to your server,
