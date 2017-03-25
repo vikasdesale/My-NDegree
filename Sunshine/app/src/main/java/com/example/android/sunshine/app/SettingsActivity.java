@@ -24,8 +24,11 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
-
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 import com.google.android.gms.location.places.Place;
@@ -43,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
     protected final static int PLACE_PICKER_REQUEST = 9090;
+    private ImageView mAttribution;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,19 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_art_pack_key)));
+
+
+        // If we are using a PlacePicker location, we need to show attributions.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mAttribution = new ImageView(this);
+            mAttribution.setImageResource(R.drawable.powered_by_google_light);
+
+            if (!Utility.isLocationLatLonAvailable(this)) {
+                mAttribution.setVisibility(View.GONE);
+            }
+
+            setListFooter(mAttribution);
+        }
     }
 
     // Registers a shared preference change listener that gets notified when preferences change
@@ -144,6 +161,11 @@ public class SettingsActivity extends PreferenceActivity
             editor.remove(getString(R.string.pref_location_longitude));
             editor.commit();
 
+            // Remove attributions for our any PlacePicker locations.
+            if (mAttribution != null) {
+                mAttribution.setVisibility(View.GONE);
+            }
+
             Utility.resetLocationStatus(this);
             SunshineSyncAdapter.syncImmediately(this);
         } else if ( key.equals(getString(R.string.pref_units_key)) ) {
@@ -173,8 +195,7 @@ public class SettingsActivity extends PreferenceActivity
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 String address = place.getAddress().toString();
-                // TODO(student): Get the LatLng object from the place -- this is a placeholder.
-                LatLng latLong = new LatLng(37.422503f, -122.083939f);
+                LatLng latLong = place.getLatLng();
 
                 // If the provided place doesn't have an address, we'll form a display-friendly
                 // string from the latlng values.
@@ -190,11 +211,10 @@ public class SettingsActivity extends PreferenceActivity
                 // Also store the latitude and longitude so that we can use these to get a precise
                 // result from our weather service. We cannot expect the weather service to
                 // understand addresses that Google formats.
-                // TODO(student) Store the latitude and longitude as float values according to the
-                // keys defined in strings.xml.
-
-
-
+                editor.putFloat(getString(R.string.pref_location_latitude),
+                        (float) latLong.latitude);
+                editor.putFloat(getString(R.string.pref_location_longitude),
+                        (float) latLong.longitude);
                 editor.commit();
 
                 // Tell the SyncAdapter that we've changed the location, so that we can update
@@ -203,6 +223,17 @@ public class SettingsActivity extends PreferenceActivity
                 // LocationEditTextPreference to handle these changes and invoke our callbacks.
                 Preference locationPreference = findPreference(getString(R.string.pref_location_key));
                 setPreferenceSummary(locationPreference, address);
+
+                // Add attributions for our new PlacePicker location.
+                if (mAttribution != null) {
+                    mAttribution.setVisibility(View.VISIBLE);
+                } else {
+                    // For pre-Honeycomb devices, we cannot add a footer, so we will use a snackbar
+                    View rootView = findViewById(android.R.id.content);
+                    Snackbar.make(rootView, getString(R.string.attribution_text),
+                            Snackbar.LENGTH_LONG).show();
+                }
+
                 Utility.resetLocationStatus(this);
                 SunshineSyncAdapter.syncImmediately(this);
             }
